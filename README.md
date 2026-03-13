@@ -15,6 +15,6 @@ Open the **workspace** to view investors, LinkedIn DMs, templates, and generated
 ## Generate messages
 
 ```bash
-pip install -r requirements.txt
+pip install -r scripts/requirements.txt
 python scripts/generate_messages.py
 ```

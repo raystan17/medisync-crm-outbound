@@ -1,7 +1,10 @@
 {
-  "framework": null,
-  "buildCommand": "",
-  "installCommand": "",
+  "builds": [
+    {
+      "src": "**",
+      "use": "@vercel/static"
+    }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/workspace/index.html" },
     { "source": "/workspace", "destination": "/workspace/index.html" }
