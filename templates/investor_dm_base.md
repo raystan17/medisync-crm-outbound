@@ -1,0 +1,1 @@
+Hi {{investor_name}} — Brock Stanley here, founder of MediSync Labs. Saw {{firm_name}}'s focus on {{focus_area}}. We're at {{user_count}} users, {{premium_growth}} growth, raising {{raise_amount}}. Quick demo: {{demo_link}} — open to a short call?

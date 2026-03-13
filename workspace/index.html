@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediSync Labs — Outbound Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f12;
+      --bg-elevated: #15181d;
+      --bg-card: #1a1e24;
+      --border: #2a2f38;
+      --text: #e6e9ef;
+      --text-muted: #8b92a0;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --success: #22c55e;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--bg-elevated);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .logo h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .logo span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+      background: rgba(59, 130, 246, 0.08);
+      border-left-color: var(--accent);
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem 2.5rem 4rem;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .section-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      min-width: 140px;
+    }
+
+    .stat-card .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+    }
+
+    .dm-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .dm-card .firm {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .dm-card .message {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      margin: 0.75rem 0 1rem;
+    }
+
+    .dm-card .actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .copy-feedback {
+      font-size: 0.75rem;
+      color: var(--success);
+      margin-left: 0.5rem;
+    }
+
+    .investors-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .investors-table th,
+    .investors-table td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .investors-table th {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .investors-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .investors-table a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .investors-table a:hover {
+      text-decoration: underline;
+    }
+
+    .template-block {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      color: var(--text-muted);
+    }
+
+    .template-block .var {
+      color: var(--accent);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .empty-state code {
+      background: var(--bg-elevated);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .output-block {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      color: var(--text-muted);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .output-block h4 {
+      color: var(--text);
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .serve-hint {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .serve-hint code {
+      background: var(--bg-elevated);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .password-gate {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 2rem;
+    }
+
+    .password-gate.hidden {
+      display: none;
+    }
+
+    .password-gate img {
+      height: 56px;
+      margin-bottom: 1.5rem;
+    }
+
+    .password-gate h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .password-gate p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .password-gate input {
+      width: 100%;
+      max-width: 260px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-elevated);
+      color: var(--text);
+      font-family: inherit;
+      margin-bottom: 1rem;
+    }
+
+    .password-gate input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .password-gate .error {
+      font-size: 0.85rem;
+      color: #ef4444;
+      margin-bottom: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="password-gate" id="password-gate">
+    <img src="/assets/logo.png" alt="MediSync Labs">
+    <h2>MediSync Labs — Outbound Workspace</h2>
+    <p>Enter password to continue</p>
+    <div class="error" id="password-error"></div>
+    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
+    <button class="btn btn-primary" id="password-submit">Enter</button>
+  </div>
+
+  <div class="layout" id="main-content" style="display: none;">
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="/assets/logo.png" alt="MediSync Labs">
+        <h1>MediSync Labs</h1>
+        <span>Outbound Workspace</span>
+      </div>
+      <nav>
+        <div class="nav-item active" data-section="overview">Overview</div>
+        <div class="nav-item" data-section="investors">Investors</div>
+        <div class="nav-item" data-section="linkedin">LinkedIn DMs</div>
+        <div class="nav-item" data-section="templates">Templates</div>
+        <div class="nav-item" data-section="output">Generated Output</div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section id="overview" class="section active">
+        <div class="section-header">
+          <h2>Workspace</h2>
+          <p>Outbound investor outreach for MediSync Labs — Cole & Brock</p>
+        </div>
+
+        <div class="serve-hint">
+          <strong>To use this workspace:</strong> Run <code>python -m http.server 8080</code> from the <code>outbound-engine</code> folder, then open <code>http://localhost:8080/workspace/</code>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="value">10</div>
+            <div class="label">Investors</div>
+          </div>
+          <div class="stat-card">
+            <div class="value">2</div>
+            <div class="label">Templates</div>
+          </div>
+          <div class="stat-card">
+            <div class="value">$100k</div>
+            <div class="label">Raise Target</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Quick links</span>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+            Everything you need for investor outreach in one place. Use the sidebar to navigate.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="#investors" class="btn btn-ghost" onclick="showSection('investors')">View investors</a>
+            <a href="#linkedin" class="btn btn-ghost" onclick="showSection('linkedin')">LinkedIn DMs</a>
+            <a href="#templates" class="btn btn-ghost" onclick="showSection('templates')">Email templates</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="investors" class="section">
+        <div class="section-header">
+          <h2>Investors</h2>
+          <p>Target firms with LinkedIn profiles</p>
+        </div>
+        <div class="card">
+          <table class="investors-table" id="investors-table">
+            <thead>
+              <tr>
+                <th>Firm</th>
+                <th>LinkedIn</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="linkedin" class="section">
+        <div class="section-header">
+          <h2>LinkedIn DMs</h2>
+          <p>Firm-specific DMs in Brock's voice — copy and paste</p>
+        </div>
+        <div id="linkedin-dms"></div>
+      </section>
+
+      <section id="templates" class="section">
+        <div class="section-header">
+          <h2>Templates</h2>
+          <p>Reusable email and DM templates with variables</p>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Email template</span>
+          </div>
+          <div class="template-block" id="email-template">Loading…</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">DM template</span>
+          </div>
+          <div class="template-block" id="dm-template">Loading…</div>
+        </div>
+      </section>
+
+      <section id="output" class="section">
+        <div class="section-header">
+          <h2>Generated output</h2>
+          <p>Run <code>python scripts/generate_messages.py</code> to generate</p>
+        </div>
+        <div id="output-content"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const INVESTORS = [
+      { firm: 'Andreessen Horowitz', linkedin: 'https://www.linkedin.com/company/a16z' },
+      { firm: 'General Catalyst', linkedin: 'https://www.linkedin.com/company/general-catalyst' },
+      { firm: 'Felicis Ventures', linkedin: 'https://www.linkedin.com/company/felicis-ventures' },
+      { firm: 'Lightspeed Venture Partners', linkedin: 'https://www.linkedin.com/company/lightspeed-venture-partners' },
+      { firm: 'Index Ventures', linkedin: 'https://www.linkedin.com/company/index-ventures' },
+      { firm: 'Flare Capital', linkedin: 'https://www.linkedin.com/company/flare-capital-partners' },
+      { firm: 'LRVHealth', linkedin: 'https://www.linkedin.com/company/lrvhealth' },
+      { firm: 'Sierra Ventures', linkedin: 'https://www.linkedin.com/company/sierra-ventures' },
+      { firm: 'Moonfire Ventures', linkedin: 'https://www.linkedin.com/company/moonfire' },
+      { firm: 'HBM Healthcare Investments', linkedin: 'https://www.linkedin.com/company/hbm-partners-ag' }
+    ];
+
+    const LINKEDIN_DMS = [
+      { firm: 'Andreessen Horowitz', linkedin: 'https://www.linkedin.com/company/a16z', message: "Hey — Brock Stanley here, founder of MediSync Labs. Your firm's leadership in AI infrastructure and healthcare tech inspired me to reach out. We're an AI-powered health platform that turns blood labs into personalized insights in seconds — HIPAA-secure. 2,000+ users, real revenue, 30+ premium sign-ups in the last 30 days. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and open to a conversation if there's alignment." },
+      { firm: 'General Catalyst', linkedin: 'https://www.linkedin.com/company/general-catalyst', message: "Brock Stanley here — I founded MediSync Labs. We use explainable AI to turn blood test data into actionable health insights, bridging the gap between clinical data and patient understanding. 2,000+ users, revenue, 30 premium sign-ups last month. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and open to a chat if this resonates." },
+      { firm: 'Felicis Ventures', linkedin: 'https://www.linkedin.com/company/felicis-ventures', message: "Hey — Brock Stanley, founder of MediSync Labs. Your conviction in early, high-impact AI platforms encouraged me to share what we're building: an AI health system that turns lab results into actionable personal guidance. 2,000+ users, monetizing, 30+ premium users in 30 days. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and would welcome a conversation if it aligns." },
+      { firm: 'Lightspeed Venture Partners', linkedin: 'https://www.linkedin.com/company/lightspeed-venture-partners', message: "Brock Stanley here — I built MediSync Labs, a health-tech platform that uses AI to convert blood labs into clear, personalized insights. 2,000+ users, real paying customers, 30+ premium sign-ups in the last 30 days. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and open to strategic partnerships that help us scale." },
+      { firm: 'Index Ventures', linkedin: 'https://www.linkedin.com/company/index-ventures', message: "Hey — Brock Stanley, founder of MediSync Labs. Your firm's global perspective on scaling deep tech healthcare encouraged me to reach out. We're a privacy-first AI system that interprets blood test data into personalized health insights — rapidly and securely. 2,000+ users, revenue, 30+ premium sign-ups last month. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and open to collaboration if this aligns with your thesis." },
+      { firm: 'Flare Capital', linkedin: 'https://www.linkedin.com/company/flare-capital-partners', message: "Brock Stanley here — founded MediSync Labs. Your focus on digital health and clinical outcomes encouraged me to introduce what we're building: an AI platform that turns blood labs into clear, personalized health guidance. 2,000+ users, revenue, 30+ premium sign-ups in 30 days. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and would welcome a conversation if this resonates." },
+      { firm: 'LRVHealth', linkedin: 'https://www.linkedin.com/company/lrvhealth', message: "Hey — Brock Stanley, founder of MediSync Labs. We're an AI-augmented health insights platform that interprets blood labs into actionable personal guidance — quickly, securely, and in a way users love. 2,000+ users, revenue, 30+ premium sign-ups last month. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and would value the opportunity to connect." },
+      { firm: 'Sierra Ventures', linkedin: 'https://www.linkedin.com/company/sierra-ventures', message: "Brock Stanley here — I built MediSync Labs, a health-tech platform that applies AI to translate blood labs into personalized insights. User growth and revenue are already underway: 2,000+ users, monetized, 30+ premium sign-ups in the past month. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and would welcome a discussion if there's alignment." },
+      { firm: 'Moonfire Ventures', linkedin: 'https://www.linkedin.com/company/moonfire', message: "Hey — Brock Stanley, founder of MediSync Labs. Your conviction around data-driven early AI companies encouraged me to share: we're a privacy-first health platform delivering personalized insights from blood labs, with traction and monetization. 2,000+ users, revenue, 30+ premium sign-ups in the last 30 days. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and would welcome a deeper conversation." },
+      { firm: 'HBM Healthcare Investments', linkedin: 'https://www.linkedin.com/company/hbm-partners-ag', message: "Brock Stanley here — founder of MediSync Labs. We're an AI-powered health insights platform that translates blood labs into personalized, actionable insights — rapidly, with privacy and clinical rigor. 2,000+ users, meaningful revenue, 30+ premium sign-ups in the last month. Demo: https://www.medisynclabs.ca/demo-login — Raising $100k and open to discussions if appropriate." }
+    ];
+
+    const EMAIL_TEMPLATE = `Subject: MediSync Labs — {{focus_area}} opportunity, {{premium_growth}} growth
+
+Hi {{investor_name}},
+
+I'm Brock Stanley, founder of MediSync Labs. I noticed {{firm_name}}'s focus on {{focus_area}}, and I thought our traction might be relevant.
+
+We've built a platform that streamlines coordination between medical practices and their patients. We're at {{user_count}} users and {{premium_growth}} premium growth over the last quarter.
+
+I'd love to show you a quick demo and share our vision for the next phase. We're raising {{raise_amount}} to scale our go-to-market and expand into new practice verticals.
+
+**Demo:** {{demo_link}}
+
+Would you be open to a 15-minute call this week or next?
+
+Best,
+Brock Stanley
+Founder, MediSync Labs`;
+
+    const DM_TEMPLATE = `Hi {{investor_name}} — Brock Stanley here, founder of MediSync Labs. Saw {{firm_name}}'s focus on {{focus_area}}. We're at {{user_count}} users, {{premium_growth}} growth, raising {{raise_amount}}. Quick demo: {{demo_link}} — open to a short call?`;
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelector(`[data-section="${id}"]`).classList.add('active');
+    }
+
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.color = 'var(--success)';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.color = '';
+        }, 1500);
+      });
+    }
+
+    function renderInvestors() {
+      const tbody = document.querySelector('#investors-table tbody');
+      tbody.innerHTML = INVESTORS.map(i =>
+        `<tr>
+          <td>${i.firm}</td>
+          <td><a href="${i.linkedin}" target="_blank" rel="noopener">Open LinkedIn →</a></td>
+        </tr>`
+      ).join('');
+    }
+
+    function renderLinkedInDMs() {
+      const container = document.getElementById('linkedin-dms');
+      container.innerHTML = LINKEDIN_DMS.map((dm, i) => `
+        <div class="dm-card">
+          <div class="firm">${dm.firm}</div>
+          <div class="actions">
+            <a href="${dm.linkedin}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Open LinkedIn</a>
+            <button class="btn btn-primary btn-sm" data-dm-index="${i}">Copy DM</button>
+          </div>
+          <div class="message">${dm.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('button[data-dm-index]').forEach(btn => {
+        btn.onclick = () => copyToClipboard(LINKEDIN_DMS[parseInt(btn.dataset.dmIndex)].message, btn);
+      });
+    }
+
+    function renderTemplates() {
+      document.getElementById('email-template').textContent = EMAIL_TEMPLATE;
+      document.getElementById('dm-template').textContent = DM_TEMPLATE;
+    }
+
+    async function loadOutput() {
+      const container = document.getElementById('output-content');
+      try {
+        const [emailsRes, dmsRes] = await Promise.all([
+          fetch('/output/emails.md'),
+          fetch('/output/linkedin_dms.md')
+        ]);
+        if (emailsRes.ok) {
+          const text = await emailsRes.text();
+          container.innerHTML += `<div class="card"><div class="card-header"><span class="card-title">emails.md</span></div><div class="output-block">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</div></div>`;
+        }
+        if (dmsRes.ok) {
+          const text = await dmsRes.text();
+          container.innerHTML += `<div class="card"><div class="card-header"><span class="card-title">linkedin_dms.md</span></div><div class="output-block">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</div></div>`;
+        }
+        if (!emailsRes.ok && !dmsRes.ok) {
+          container.innerHTML = '<div class="empty-state">Run <code>python scripts/generate_messages.py</code> to generate emails and LinkedIn DMs.</div>';
+        }
+      } catch {
+        container.innerHTML = '<div class="empty-state">Run <code>python scripts/generate_messages.py</code> from the outbound-engine folder to generate output. Make sure you\'re viewing this via a local server (see Overview).</div>';
+      }
+    }
+
+    const AUTH_KEY = 'medisync_outbound_auth';
+
+    function checkAuth() {
+      if (sessionStorage.getItem(AUTH_KEY) === '1') {
+        document.getElementById('password-gate').classList.add('hidden');
+        document.getElementById('main-content').style.display = 'flex';
+        return true;
+      }
+      return false;
+    }
+
+    function initPasswordGate() {
+      if (checkAuth()) return;
+
+      const gate = document.getElementById('password-gate');
+      const input = document.getElementById('password-input');
+      const submit = document.getElementById('password-submit');
+      const error = document.getElementById('password-error');
+
+      function tryUnlock() {
+        if (input.value === 'pillow123') {
+          sessionStorage.setItem(AUTH_KEY, '1');
+          gate.classList.add('hidden');
+          document.getElementById('main-content').style.display = 'flex';
+          renderInvestors();
+          renderLinkedInDMs();
+          renderTemplates();
+          loadOutput();
+        } else {
+          error.textContent = 'Incorrect password';
+          input.focus();
+        }
+      }
+
+      submit.onclick = tryUnlock;
+      input.onkeydown = (e) => { if (e.key === 'Enter') tryUnlock(); };
+      input.focus();
+    }
+
+    initPasswordGate();
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => showSection(item.dataset.section));
+    });
+
+    if (checkAuth()) {
+        renderInvestors();
+      renderLinkedInDMs();
+      renderTemplates();
+      loadOutput();
+    }
+  </script>
+</body>
+</html>
